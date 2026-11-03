@@ -1,0 +1,14 @@
+node_modules
+dist
+dist-ssr
+.git
+.cursor
+*.log
+*.local
+.DS_Store
+README.md
+.env
+.env.*
+public/gltf-optimizer-main
+public/fonts/BasierCircle-Medium.otf
+ZSSK variable.backup

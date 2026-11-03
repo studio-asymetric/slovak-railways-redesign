@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Slovak Railways Redesign — Dalibor Itze</title>
+    <meta name="description" content="Bachelor thesis showcase for Železničná spoločnosť Slovensko: new liveries, wayfinding system, design history, and an interactive 3D train builder. Best in Design 2025, Zlin Design Week." />
+    <meta name="author" content="Dalibor Itze" />
+    <meta property="og:title" content="Slovak Railways Redesign" />
+    <meta property="og:description" content="Liveries, navigation design, and a modular coating system for Slovak Railways — thesis project by Dalibor Itze." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Slovak Railways Redesign" />
+    <meta name="twitter:description" content="Liveries, wayfinding, and 3D train builder — bachelor thesis by Dalibor Itze." />
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#141414" />
+    <meta name="msapplication-TileColor" content="#bc292e" />
+    <link rel="stylesheet" href="src/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wdth,wght@75..100,400..700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <script>
+      if (location.pathname === '/' || location.pathname === '') {
+        if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+        window.scrollTo(0, 0);
+      }
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+
+  </head>
+
+  
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-JDED0M430Q"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-JDED0M430Q');
+  </script>
+
+
+  <body class="lang-en">
+
+
+    <div id="app"></div>
+
+    <!-- Fixed: language + menu (top right) -->
+    <div id="site-fixed-bar">
+      <button id="builder-back" type="button" data-i18n-aria-en="Exit train builder" data-i18n-aria-sk="Opustiť skladanie vlaku">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M13 8H3M7 4L3 8l4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="en">Back to overview</span>
+        <span class="sk">Späť na prehľad</span>
+      </button>
+      <button type="button" id="lang-switch" aria-pressed="false">SK</button>
+      <button type="button" id="site-menu-btn"><span class="en">Menu</span><span class="sk">Menu</span></button>
+    </div>
+
+    <div id="menu" class="">
+      <div>
+        <a href="/" class="menu-logo" data-i18n-aria-en="Slovak Railways Redesign — home" data-i18n-aria-sk="Redizajn železníc Slovensko — domov">
+          <img src="assets/logo.svg" alt="Slovak Railways Redesign" width="290" height="35">
+        </a>
+        <p class="menu-label"><span class="en">Explore this project</span><span class="sk">Preskúmajte tento projekt</span></p>
+        <div class="link-wrapper" id="watch_video"><a><span class="en">Watch the video</span><span class="sk">Pozrieť video</span></a></div>
+        <div class="link-wrapper" id="new_visual"><a><span class="en">The new liveries</span><span class="sk">Nové nátery</span></a></div>
+        <div class="link-wrapper" id="thanks"><a><span class="en">Thank you</span><span class="sk">Poďakovanie</span></a></div>
+        <div class="link-wrapper" id="History"><a><span class="en">Why redesign? (History)</span><span class="sk">Prečo redizajn? (História)</span></a></div>
+        <div class="link-wrapper" id="navigation_design"><a><span class="en">Wayfinding &amp; signage</span><span class="sk">Navigácia a značenie</span></a></div>
+        <div class="link-wrapper" id="abroad"><a><span class="en">Inspiration abroad</span><span class="sk">Inšpirácia zo zahraničia</span></a></div>
+        <div class="link-wrapper" id="sources"><a><span class="en">Sources</span><span class="sk">Zdroje</span></a></div>
+        <div class="link-wrapper" id="3dtrains"><a><span class="en">3D train builder</span><span class="sk">3D skladanie vlakov</span></a></div>
+        <div class="link-wrapper"><a href="https://byitze.com/">Dalibor Itze</a></div>
+      </div>
+    </div>
+
+    <!-- Continuous scroll document -->
+    <div id="site-scroll">
+    <!-- ── Hero / Loading screen ─────────────────────────────────────────── -->
+    <div id="hero-overlay">
+      <div id="hero">
+        <div id="hero-canvas-wrap"></div>
+
+        <!-- Loading card: visible while 3D scene loads -->
+        <div id="hero-card">
+          <div id="hero-logo-mark">
+            <img src="assets/logo.svg" alt="Slovak Railways Redesign" width="290" height="35">
+          </div>
+          <div id="hero-bar-track">
+            <div id="hero-bar-fill"></div>
+          </div>
+          <p id="hero-status"><span class="en">Initializing…</span><span class="sk">Inicializácia…</span></p>
+        </div>
+
+        <!-- Full-hero UI: revealed after loading completes -->
+        <div id="hero-ui">
+          <!-- Top-left project logo — replace SVG with provided asset when ready -->
+          <nav>
+            <div id="hero-logo-corner">
+              <img src="assets/logo.svg" alt="Slovak Railways Redesign" width="290" height="35">
+            </div>
+            <button id="trainspot-random" type="button" class="trainspot-random">
+              <span class="en">Random train</span>
+              <span class="sk">Náhodný vlak</span>
+            </button>
+          </nav>
+          
+
+          <!-- Centre call-to-action -->
+          <div class="hero-cta-row">
+            <button id="hero-cta" type="button">
+              <span class="hero-cta-label hero-cta-label--builder">
+                <span class="en">Build your own train</span>
+                <span class="sk">Postav si vlak</span>
+              </span>
+              <span class="hero-cta-label hero-cta-label--spot">
+                <span class="en">Go trainspotting</span>
+                <span class="sk">Choď trainspotting</span>
+              </span>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <button id="hero-random" type="button">
+              <span class="en">Random train</span>
+              <span class="sk">Náhodný vlak</span>
+            </button>
+          </div>
+
+          <!-- Bottom-right YouTube card -->
+          <div id="hero-video-card" role="button" tabindex="0" data-i18n-aria-en="Watch: Slovak Railways Redesign on YouTube" data-i18n-aria-sk="Pozrieť: Redizajn železníc Slovensko na YouTube">
+            <div id="hero-video-thumb">
+              <img src="https://img.youtube.com/vi/WDghfP8oXvU/hqdefault.jpg" alt="" width="320" height="180" loading="lazy">
+              <span class="hero-video-play" aria-hidden="true">
+                <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                  <circle cx="14" cy="14" r="13" fill="rgba(0,0,0,0.55)" stroke="rgba(255,255,255,0.35)" stroke-width="1"/>
+                  <polygon points="12,9 21,14 12,19" fill="white"/>
+                </svg>
+              </span>
+            </div>
+            <span class="hero-video-title">Slovak Railways Redesign</span>
+            <span class="hero-video-meta"><span class="en">Watch on YouTube</span><span class="sk">Pozrieť na YouTube</span></span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <!-- ─────────────────────────────────────────────────────────────────── -->
+
+
+    <!-- <header id="read-chrome">
+      <div class="read-chrome-bar">
+        <img class="read-chrome-logo" src="assets/logo.svg" alt="Slovak Railways Redesign" width="160" height="20">
+        <nav class="read-chrome-nav" aria-label="Thesis sections">
+          <a href="#thesis-intro" class="read-nav-link" data-section="intro"><span class="en">Intro</span><span class="sk">Úvod</span></a>
+          <a href="#thesis-new_visual" class="read-nav-link" data-section="new_visual"><span class="en">Liveries</span><span class="sk">Nátery</span></a>
+          <a href="#thesis-thanks" class="read-nav-link" data-section="thanks"><span class="en">Thank you</span><span class="sk">Poďakovanie</span></a>
+          <a href="#thesis-history" class="read-nav-link" data-section="history"><span class="en">History</span><span class="sk">História</span></a>
+          <a href="#thesis-navigation_design" class="read-nav-link" data-section="navigation_design"><span class="en">Wayfinding</span><span class="sk">Navigácia</span></a>
+          <a href="#thesis-abroad" class="read-nav-link" data-section="abroad"><span class="en">Abroad</span><span class="sk">Zahraničie</span></a>
+          <a href="#thesis-sources" class="read-nav-link" data-section="sources"><span class="en">Sources</span><span class="sk">Zdroje</span></a>
+        </nav>
+        <button type="button" id="read-watch-video" class="read-chrome-btn read-chrome-btn--video">
+          <span class="en">Video</span>
+          <span class="sk">Video</span>
+        </button>
+      </div>
+      <div id="read-progress" aria-hidden="true"><span id="read-progress-fill"></span></div>
+    </header> -->
+
+    <main id="thesis-document">
+      <section id="thesis-intro" class="thesis-chapter thesis-chapter--intro">
+        <div class="intro-grid">
+
+          <!-- Row 1, Col 2: palette legend -->
+          <div class="intro-cell intro-cell--palette no-border-right">
+            <ul class="intro-palette">
+              <li>#777A7C</li>
+              <li>#B1B7BE</li>
+              <li>#F34018</li>
+              <li>#BC292E</li>
+              <li>#white</li>
+              <li>#B1B7BE</li>
+            </ul>
+          </div>
+
+
+
+          <!-- Row 1, Col 3: headline -->
+          <div class="intro-cell intro-cell--headline">
+            <div class="intro-livery-card has-image">
+              <img class="intro-livery-img" src="assets/bento pallete.svg" alt="ZSSK livery colour palette">
+            </div>
+
+            <div class="intro-cell intro-cell--headline-content">
+
+              <p class="intro-eyebrow"><span class="en">Railway Design · Thesis · Dalibor Itze · 2025</span><span class="sk">Dizajn železníc · Bakalárska práca · Dalibor Itze · 2025</span></p>
+              <img class="en intro-headline-logo" src="assets/Slovak Railways Redesign.svg" alt="Slovak Railways Redesign" width="858" height="220">
+              <img class="sk intro-headline-logo" src="assets/Slovak Railways Redesign.svg" alt="Redizajn Železničnej spoločnosti Slovensko" width="858" height="220">
+            </div>
+          </div>
+
+          <!-- Row 2, Col 3: video + description -->
+          <div class="intro-cell intro-cell--desc">
+            <button type="button" class="intro-video-card" id="thesis-intro-watch">
+              <div class="intro-video-thumb">
+                <img src="https://img.youtube.com/vi/WDghfP8oXvU/hqdefault.jpg" alt="Project video thumbnail" loading="lazy">
+                <span class="intro-video-badge">
+                  <span class="en">YouTube</span>
+                  <span class="sk">YouTube</span>
+                </span>
+              </div>
+              <p class="intro-video-title">
+                <span class="en">Why Are Slovak Trains a Design Disaster?</span>
+                <span class="sk">Prečo sú slovenské vlaky dizajnová katastrofa?</span>
+              </p>
+              <span class="intro-video-cta">
+                <span class="en">watch the project video on youtube</span>
+                <span class="sk">pozrieť video projektu na youtube</span>
+              </span>
+            </button>
+            <p class="en intro-desc">A bachelor thesis exploring how Slovak Railways could look today — new locomotive and carriage liveries, a coherent wayfinding system, and the&nbsp;design history that explains why change matters.</p>
+            <p class="sk intro-desc">Bakalárska práca skúmajúca, ako by mohli dnes vyzerať slovenské železnice — nové nátery, jednotný navigačný systém a&nbsp;kontext histórie dizajnu na&nbsp;železnici.</p>
+          </div>
+
+          <div class="intro-cell intro-cell--empty intro-cell--empty-side"></div>
+          <div class="intro-cell intro-cell--empty no-border-left intro-cell--empty-side"></div>
+          <div class="intro-cell intro-cell--empty intro-cell--empty-side"></div>
+          <div class="intro-cell intro-cell--empty intro-cell--empty-side"></div>
+          <div class="intro-cell intro-cell--empty no-border-right intro-cell--empty-side"></div>
+          <div class="intro-cell intro-cell--empty no-border-left intro-cell--empty-side"></div>
+        </div>
+      </section>
+
+      <section id="thesis-new_visual" class="thesis-chapter thesis-chapter--showcase">
+        <div class="showcase-section-header-host"></div>
+        <div class="showcase-layout">
+          <div class="showcase-canvas-column">
+            <div class="showcase-canvas-wrap">
+              <div id="studio-canvas-host" class="showcase-canvas-host" aria-hidden="true"></div>
+            </div>
+          </div>
+          <div id="showcase-panels" class="showcase-panels">
+            <article id="new_visual_text"></article>
+          </div>
+        </div>
+      </section>
+
+      <section id="thesis-thanks" class="thesis-chapter">
+        <div class="thesis-chapter-inner thesis-chapter-inner--narrow">
+          <article id="thanks_text"></article>
+        </div>
+      </section>
+
+      <section id="thesis-history" class="thesis-chapter thesis-chapter--split">
+        <div class="thesis-chapter-inner thesis-chapter-inner--split">
+          <article id="bakalarka_text"></article>
+          <div class="TOC">
+            <a href="/history#cssd_sk" class="sk">1.1 ČSD – Československé státní dráhy</a>
+            <a href="/history#cssd_en" class="en">1.1 ČSD – Czechoslovak State Railways</a>
+            <a href="/history#zsr_sk" class="sk">1.2 ŽSR – divoké deväťdesiate roky v dizajne na železnici</a>
+            <a href="/history#zsr_en" class="en">1.2 ŽSR – the wild nineties in railway design</a>
+            <a href="/history#zssk_sk" class="sk">1.3 Železničná spoločnosť Slovensko, Daniel Blonski a súčasnosť</a>
+            <a href="/history#zssk_en" class="en">1.3 Slovak Railways, Daniel Blonski and the Present</a>
+            <a href="/history#liberalizacia_sk" class="sk">1.4 Liberalizácia železníc – budúcnosť</a>
+            <a href="/history#liberalizacia_en" class="en">1.4 Rail liberalisation – the future</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="thesis-navigation_design" class="thesis-chapter thesis-chapter--split">
+        <div class="thesis-chapter-inner thesis-chapter-inner--split">
+          <article id="navigation_design_text"></article>
+          <div class="TOC">
+            <a href="/navigation_design#pictograms_sk" class="sk">Piktogramy</a>
+            <a href="/navigation_design#pictograms_en" class="en">Pictograms</a>
+            <a href="/navigation_design#zaklady_sk" class="sk">Základy navigačného systému</a>
+            <a href="/navigation_design#zaklady_en" class="en">What's a navigation system</a>
+            <a href="/navigation_design#exterier_sk" class="sk">Exteriér vozidla a jeho navigačný systém</a>
+            <a href="/navigation_design#exterier_en" class="en">Exterior of the Vehicle and Its Navigation System</a>
+            <a href="/navigation_design#oddiely_sk" class="sk">Značenie oddielov</a>
+            <a href="/navigation_design#oddiely_en" class="en">Compartment marking</a>
+            <a href="/navigation_design#interier_sk" class="sk">Interiér vozidla a jeho navigačný systém</a>
+            <a href="/navigation_design#interier_en" class="en">Interior of the Vehicle and Its Navigation System</a>
+            <a href="/navigation_design#konstrukcia_sk" class="sk">Konštrukcia ceduliek</a>
+            <a href="/navigation_design#konstrukcia_en" class="en">Plaque construction</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="thesis-abroad" class="thesis-chapter thesis-chapter--split">
+        <div class="thesis-chapter-inner thesis-chapter-inner--split">
+          <article id="abroad_text"></article>
+          <div class="TOC">
+            <a href="/abroad#obb_sk" class="sk">Nátery ÖBB</a>
+            <a href="/abroad#obb_en" class="en">ÖBB coatings</a>
+            <a href="/abroad#westbahn_sk" class="sk">Westbahn</a>
+            <a href="/abroad#westbahn_en" class="en">Westbahn</a>
+            <a href="/abroad#bwegt_sk" class="sk">BWegt</a>
+            <a href="/abroad#bwegt_en" class="en">BWegt</a>
+            <a href="/abroad#cd_sk" class="sk">České Dráhy</a>
+            <a href="/abroad#cd_en" class="en">Czech Railways</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="thesis-sources" class="thesis-chapter">
+        <div class="thesis-chapter-inner thesis-chapter-inner--narrow">
+          <article id="sources_text"></article>
+        </div>
+      </section>
+    </main>
+
+    <footer id="site-footer" class="site-footer">
+      <div class="site-footer-inner">
+        <div class="site-footer-brand">
+          <a href="/" class="site-footer-logo" data-footer-action="top" data-i18n-aria-en="Slovak Railways Redesign — home" data-i18n-aria-sk="Redizajn železníc Slovensko — domov">
+            <img src="assets/logo.svg" alt="Slovak Railways Redesign" width="240" height="29" loading="lazy">
+          </a>
+          <p class="site-footer-tagline">
+            <span class="en">Bachelor thesis showcase — liveries, wayfinding, and an interactive train builder for Slovak Railways.</span>
+            <span class="sk">Prezentácia bakalárskej práce — nátery, navigácia a interaktívny skladač vlakov pre Železničnú spoločnosť Slovensko.</span>
+          </p>
+          <p class="site-footer-award">
+            <span class="en">Best in Design 2025 · Zlin Design Week</span>
+            <span class="sk">Best in Design 2025 · Zlin Design Week</span>
+          </p>
+        </div>
+
+        <nav class="site-footer-col" aria-labelledby="site-footer-thesis-label">
+          <p id="site-footer-thesis-label" class="site-footer-label"><span class="en">Thesis</span><span class="sk">Práca</span></p>
+          <ul class="site-footer-links">
+            <li><a href="/read" data-footer-action="intro"><span class="en">Introduction</span><span class="sk">Úvod</span></a></li>
+            <li><a href="/new_visual" data-footer-action="new_visual"><span class="en">New liveries</span><span class="sk">Nové nátery</span></a></li>
+            <li><a href="/thanks" data-footer-action="thanks"><span class="en">Thank you</span><span class="sk">Poďakovanie</span></a></li>
+            <li><a href="/history" data-footer-action="history"><span class="en">History of liveries</span><span class="sk">História náterov</span></a></li>
+            <li><a href="/navigation_design" data-footer-action="navigation_design"><span class="en">Wayfinding &amp; signage</span><span class="sk">Navigácia a značenie</span></a></li>
+            <li><a href="/abroad" data-footer-action="abroad"><span class="en">Inspiration abroad</span><span class="sk">Inšpirácia zo zahraničia</span></a></li>
+            <li><a href="/sources" data-footer-action="sources"><span class="en">Sources</span><span class="sk">Zdroje</span></a></li>
+          </ul>
+        </nav>
+
+        <nav class="site-footer-col" aria-labelledby="site-footer-experience-label">
+          <p id="site-footer-experience-label" class="site-footer-label"><span class="en">Experience</span><span class="sk">Zážitok</span></p>
+          <ul class="site-footer-links">
+            <li><a href="#" data-footer-action="video"><span class="en">Watch the video</span><span class="sk">Pozrieť video</span></a></li>
+            <li><a href="#" data-footer-action="builder"><span class="en">3D train builder</span><span class="sk">3D skladanie vlakov</span></a></li>
+            <li><a href="/" data-footer-action="top"><span class="en">Back to overview</span><span class="sk">Späť na prehľad</span></a></li>
+          </ul>
+        </nav>
+
+        <nav class="site-footer-col" aria-labelledby="site-footer-author-label">
+          <p id="site-footer-author-label" class="site-footer-label"><span class="en">Author &amp; links</span><span class="sk">Autor a odkazy</span></p>
+          <ul class="site-footer-links">
+            <li><a href="https://byitze.com/" target="_blank" rel="noopener noreferrer">Dalibor Itze</a></li>
+            <li>
+              <a href="https://zlindesignweek.com/2026/en/2025/05/12/best-in-design-2025-award-and-e1500-prize-go-to-slovakia-dalibor-itze-wins-with-slovak-railways-redesign/" target="_blank" rel="noopener noreferrer">
+                <span class="en">Award announcement</span><span class="sk">Oznámenie o ocenení</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://www.youtube.com/watch?v=WDghfP8oXvU" target="_blank" rel="noopener noreferrer">YouTube</a>
+            </li>
+          </ul>
+        </nav>
+
+        <div class="site-footer-bar">
+          <p class="site-footer-copy">
+            <span class="en">© 2025 Dalibor Itze · Conceptual redesign — not affiliated with ŽSSK</span>
+            <span class="sk">© 2025 Dalibor Itze · Konceptuálny redizajn — bez väzby na ŽSSK</span>
+          </p>
+          <p class="site-footer-meta">UTB Zlín · FMK · Graphic Design</p>
+        </div>
+      </div>
+    </footer>
+    </div><!-- /#site-scroll -->
+
+    <!-- Builder + modal overlays (fixed when active) -->
+    <div id="experience-layer">
+      <div id="video-modal" class="video-modal" aria-hidden="true" role="dialog" data-i18n-aria-en="Project video" data-i18n-aria-sk="Video projektu">
+        <div class="video-modal-backdrop" tabindex="-1"></div>
+        <div class="video-modal-dialog">
+          <button type="button" class="video-modal-close" data-i18n-aria-en="Close video" data-i18n-aria-sk="Zavrieť video">&times;</button>
+          <div class="video-modal-embed">
+            <iframe id="video-modal-iframe" data-i18n-title-en="Slovak Railways Redesign — YouTube" data-i18n-title-sk="Redizajn železníc Slovensko — YouTube" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+          </div>
+        </div>
+      </div>
+
+      <!-- <button type="button" id="video-pill" aria-label="Continue watching video" hidden>
+        <img src="https://img.youtube.com/vi/WDghfP8oXvU/default.jpg" alt="" width="48" height="36">
+        <span>Continue watching</span>
+      </button> -->
+
+      <section id="controlcontainer">
+        <div id="control">
+          <div class="builder-hud">
+            <div class="builder-hud-row">
+              <span class="builder-title"><span class="en">Quick start</span><span class="sk">Rýchly štart</span></span>
+              <div class="builder-preset-row">
+                <button type="button" class="builder-preset" data-preset="0" data-tip-en="Load InterCity express consist" data-tip-sk="Načítať InterCity súpravu">InterCity</button>
+                <button type="button" class="builder-preset" data-preset="1" data-tip-en="Load Stadler KISS EMU" data-tip-sk="Načítať Stadler KISS EMU">Kiss EMU</button>
+                <button type="button" class="builder-preset" data-preset="2" data-tip-en="Load Škoda RegioPanter EMU" data-tip-sk="Načítať Škodu RegioPanter EMU">Panter EMU</button>
+                <button type="button" class="builder-preset builder-preset--ghost" id="surprise_train" data-tip-en="Load a random train" data-tip-sk="Načítať náhodný vlak"><span class="en">Surprise me</span><span class="sk">Prekvap ma</span></button>
+                <span class="builder-hud-divider" aria-hidden="true"></span>
+                <button type="button" class="builder-toggle" id="builder_showcase" aria-pressed="false" data-tip-en="Auto-cycle through all vehicles" data-tip-sk="Automatická prezentácia vozidiel"><span class="en">Showcase</span><span class="sk">Prezentácia</span></button>
+                <button type="button" class="builder-toggle active" id="builder_cam_follow" aria-pressed="true" data-i18n-title-en="Camera follows train rotation" data-i18n-title-sk="Kamera sleduje otočenie vlaku" data-tip-en="Camera tracks train direction" data-tip-sk="Kamera sleduje smer vlaku"><span class="en">Follow cam</span><span class="sk">Sleduj kamerou</span></button>
+                <div id="builder-transition-spinner" aria-hidden="true" data-i18n-title-en="Updating train…" data-i18n-title-sk="Aktualizácia vlaku…"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="builder-section builder-consist">
+            <div class="builder-section-header">
+              <span class="builder-title"><span class="en">Your train</span><span class="sk">Tvoj vlak</span></span>
+              <span class="builder-direction"><span class="en">← Front · Back →</span><span class="sk">← Čelo · Zadok →</span></span>
+              <button type="button" id="builder-car-read" class="builder-car-read" hidden data-tip-en="Open livery design chapter for this vehicle" data-tip-sk="Otvoriť kapitolu o dizajne tohto vozidla"><span class="en">Read about this design →</span><span class="sk">Prečítaj si o tomto dizajne →</span></button>
+              <span class="builder-hint"><span class="en">Drag to reorder · + to add · × to remove</span><span class="sk">Pretiahni na zmenu poradia · + pridať · × odstrániť</span></span>
+            </div>
+            <div id="consist_scroll" class="builder-scroll-viewport">
+              <div id="consist_scroll_content" class="builder-scroll-content">
+                <div id="current_train"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="builder-section builder-catalog">
+            <div class="builder-section-header">
+              <span class="builder-title"><span class="en">Add cars</span><span class="sk">Pridať vozne</span></span>
+              <div class="builder-tabs" role="tablist">
+                <button type="button" class="builder-tab active" data-tab="locos"><span class="en">Locomotives</span><span class="sk">Lokomotívy</span></button>
+                <button type="button" class="builder-tab" data-tab="emu"><span class="en">EMU / DMU</span><span class="sk">EMU / Motorové jednotky</span></button>
+                <button type="button" class="builder-tab" data-tab="coaches"><span class="en">Coaches</span><span class="sk">Vozne</span></button>
+                <button type="button" class="builder-tab" data-tab="special"><span class="en">Special</span><span class="sk">Špeciálne</span></button>
+              </div>
+            </div>
+            <div id="catalog_scroll" class="builder-scroll-viewport">
+              <div id="catalog_scroll_content" class="builder-scroll-content">
+                <div id="train_menu">
+                  <div class="train_selection" id="panterZadok"><img src="assets/panterZadok.png"><div class="select_box"></div></div>
+                  <div class="train_selection" id="panterStred"><img src="assets/panterStred.png"><div class="select_box"></div></div>
+                  <div class="train_selection" id="panterPredok"><img src="assets/panterPredok.png"><div class="select_box"></div></div>
+                  <div class="train_selection" id="KissCumakKoniec"><img src="assets/kiss zadok 2d.png"><div class="select_box"></div></div>
+                  <div class="train_selection" id="KissStred"><img src="assets/kiss stred.png"><div class="select_box"></div></div>
+                  <div class="train_selection" id="KissPredok"><img src="assets/kiss predok 2d.png"><div class="select_box"></div></div>
+                  <div class="train_selection" id="janosikriadiaci"><img src="assets/janosikriadiaci.png"><div class="select_box"></div></div>
+                  <div class="train_selection" id="janosikstred"><img src="assets/janosikstred.png"><div class="select_box"></div></div>
+                  <div class="train_selection" id="janosikpredok"><img src="assets/janosikpredok.png"><div class="select_box"></div></div>
+                  <div class="train_selection" id="dmu861koniec"><img src="assets/dmu861 koniec.png"><div class="select_box"></div></div>
+                  <div class="train_selection" id="dmu861stred"><img src="assets/dmu861 stred.png"><div class="select_box"></div></div>
+                  <div class="train_selection" id="dmu861zaciatok"><img src="assets/dmu861 zaciatok.png"><div class="select_box"></div></div>
+                  <div class="train_selection" id="lok383"><img src="assets/lok383.png"><div class="select_box"></div></div>
+                  <div class="train_selection" id="lok380"><img src="assets/lok380.png"><div class="select_box"></div></div>
+                  <div class="train_selection" id="lok350"><img src="assets/lok350.png"><div class="select_box"></div></div>
+                  <div class="train_selection" id="lok363"><img src="assets/lok363.png"><div class="select_box"></div></div>
+                  <div class="train_selection" id="lok240"><img src="assets/lok240.png"><div class="select_box"></div></div>
+                  <div class="train_selection" id="lok754"><img src="assets/lok754.png"><div class="select_box"></div></div>
+                  <div class="train_selection" id="lok210"><img src="assets/lok210.png"><div class="select_box"></div></div>
+                  <div class="train_selection" id="ampeer"><img src="assets/ampeer.png"><div class="select_box"></div></div>
+                  <div class="train_selection" id="bmpeer"><img src="assets/bmpeer.png"><div class="select_box"></div></div>
+                  <div class="train_selection" id="bmz"><img src="assets/bmz.png"><div class="select_box"></div></div>
+                  <div class="train_selection" id="bds"><img src="assets/bds.png"><div class="select_box"></div></div>
+                  <div class="train_selection" id="wrrm"><img src="assets/wrrm.png"><div class="select_box"></div></div>
+                  <div class="train_selection" id="wlab"><img src="assets/wlab.png"><div class="select_box"></div></div>
+                  <div class="train_selection" id="delfin"><img src="assets/delfin.png"><div class="select_box"></div></div>
+                  <div class="train_selection" id="tatra"><img src="assets/tatra.png"><div class="select_box"></div></div>
+                  <div class="train_selection" id="dmu810"><img src="assets/dmu810.png"><div class="select_box"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div id="fontloader"></div>
+    <script type="module" src="src/main.js"></script>
+  </body>
+</html>

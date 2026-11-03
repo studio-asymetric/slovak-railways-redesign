@@ -1,0 +1,139 @@
+import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+
+function init() {
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0xffffff);
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+  camera.position.set(5, 5, 15);
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement);
+
+  const controls = new OrbitControls(camera, renderer.domElement);
+
+  const ambientLight = new THREE.AmbientLight(0x404040);
+  scene.add(ambientLight);
+
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+  directionalLight.position.set(5, 10, 7.5);
+  directionalLight.castShadow = true;
+  scene.add(directionalLight);
+
+  const planeGeometry = new THREE.PlaneGeometry(50, 50);
+  const planeMaterial = new THREE.MeshStandardMaterial({ color: 0xaaaaaa });
+  const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+  plane.rotation.x = -Math.PI / 2;
+  plane.receiveShadow = true;
+  scene.add(plane);
+
+  const curve = createLemniscateCurve();
+  const trains = addCubesToCurve(scene, curve, 4, 0.5); // Assuming each cube is 0.5 units
+
+  animate(renderer, scene, camera, controls, curve, trains);
+}
+
+
+function createLemniscateCurve() {
+  const scale = 10; // Scale up the size of the curve
+  const curve = new THREE.Curve();
+  curve.getPoint = function (t) {
+      const a = scale; // Controls the size of the curve
+      const theta = 2 * Math.PI * t;
+      const r = Math.sqrt(2) * a / (1 + Math.sin(theta) ** 2);
+      const x = r * Math.cos(theta);
+      const z = r * Math.sin(theta) * Math.cos(theta);
+      return new THREE.Vector3(x, 0, z);
+  };
+  return curve;
+}
+
+// Calculate the length of the curve
+function calculateCurveLength(curve, segments = 100) {
+  let length = 0;
+  let lastPoint = curve.getPoint(0);
+  for (let i = 1; i <= segments; i++) {
+      let point = curve.getPoint(i / segments);
+      length += point.distanceTo(lastPoint);
+      lastPoint = point;
+  }
+  return length;
+}
+
+function addCubesToCurve(scene, curve, numberOfCubes, cubeSize) {
+  const material = new THREE.MeshLambertMaterial({ color: 0xff0000 });
+  const geometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
+  const curveLength = calculateCurveLength(curve);
+  const spacing = cubeSize * 1.5; // 1.5 times the size of a cube between each
+  const totalRequiredSpace = spacing * (numberOfCubes - 1);
+  const offsetIncrement = totalRequiredSpace / curveLength;
+
+  const cubes = [];
+  let currentOffset = 0;
+
+  for (let i = 0; i < numberOfCubes; i++) {
+      const cube = new THREE.Mesh(geometry, material);
+      cube.castShadow = true;
+      const position = curve.getPointAt(currentOffset / curveLength);
+      cube.position.copy(position);
+      scene.add(cube);
+      cubes.push({ mesh: cube, offset: currentOffset / curveLength });
+      currentOffset += spacing;
+  }
+
+  return cubes;
+}
+
+function animate(renderer, scene, camera, controls, curve, trains) {
+  const clock = new THREE.Clock();
+  let lastUserInteractionTime = Date.now(); // Track when the user last interacted
+  let isUserInteracting = false;
+
+  // Listen for user interaction events
+  document.addEventListener('mousemove', () => { isUserInteracting = true; lastUserInteractionTime = Date.now(); });
+  document.addEventListener('wheel', () => { isUserInteracting = true; lastUserInteractionTime = Date.now(); });
+
+  function render() {
+      const delta = clock.getDelta();
+
+      // Update the position of each train
+      trains.forEach(train => {
+          train.offset += delta * 0.002;  // Speed factor
+          if (train.offset > 1) train.offset -= 1;
+          train.mesh.position.copy(curve.getPointAt(train.offset));
+          const tangent = curve.getTangentAt(train.offset).normalize();
+          train.mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), tangent);
+      });
+
+      // Update the target of the OrbitControls to the first cube's position
+      controls.target.copy(trains[0].mesh.position);
+
+      // Check if there's been recent user interaction
+      if (Date.now() - lastUserInteractionTime > 1000) { // 1 second of no interaction
+          isUserInteracting = false;
+      }
+
+      if (!isUserInteracting) {
+          // Desired position is some offset from the first cube
+          const desiredPosition = trains[0].mesh.position.clone().add(new THREE.Vector3(-10, 5, 10));
+          camera.position.lerp(desiredPosition, 0.05);  // Smoothly move the camera to the desired position
+      }
+
+      controls.update();
+      renderer.render(scene, camera);
+      requestAnimationFrame(render);
+  }
+  render();
+}
+
+
+function onWindowResize(camera, renderer) {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+init();
+
+

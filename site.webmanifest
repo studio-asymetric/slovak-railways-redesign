@@ -1,0 +1,23 @@
+{
+  "name": "Slovak Railways Redesign",
+  "short_name": "ZSSK Redesign",
+  "description": "Bachelor thesis showcase — liveries, wayfinding, history, and 3D train builder. Best in Design 2025, Zlin Design Week.",
+  "icons": [
+    {
+      "src": "/web-app-manifest-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/web-app-manifest-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "theme_color": "#141414",
+  "background_color": "#f9f9f9",
+  "display": "standalone",
+  "lang": "en"
+}
