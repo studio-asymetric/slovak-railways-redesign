@@ -18,6 +18,8 @@ dist-ssr
 .idea
 .cursor
 .DS_Store
+desktop.ini
+Thumbs.db
 
 # Not part of the open release
 public/gltf-optimizer-main
