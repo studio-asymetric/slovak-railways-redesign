@@ -47,7 +47,7 @@ The full render set lives in `public/other/renders/`.
 | Build | Vite 5 |
 | 3D | Three.js — GLB modules, Draco, HDR lighting, bloom |
 | Scroll | Lenis |
-| Type | ZSSK Variable (self-hosted, SIL OFL). Instrument Sans and Instrument Serif load from Google Fonts |
+| Type | Instrument Sans and Instrument Serif, from Google Fonts (SIL OFL, not vendored). The file at `public/fonts/ZSSK variable-VF.ttf` is a small icon font the page already loads |
 | Runtime | Static files behind nginx |
 
 The builder treats each vehicle as a module (`models/*.glb`): locomotives, KISS, Panter, DMUs, Tatra trams, and UIC coaches. Thumbnails for the picker are in `assets/`.
@@ -121,11 +121,12 @@ If Coolify cannot see the repository, the GitHub App has not been granted access
 
 | Part | Licence |
 | --- | --- |
-| ZSSK Variable (`public/fonts/ZSSK variable-VF.ttf`, `ZSSK variable.vfc`) | [SIL Open Font License 1.1](OFL.txt), Reserved Font Name **ZSSK Variable** |
 | Website code | MIT |
 | Original models, livery renders, diagrams, and interface graphics | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) |
 
-SIL OFL covers font software only. The 3D models and renders are original thesis assets and are released under CC BY 4.0 so they can actually be reused. Credit Dalibor Itze.
+Credit Dalibor Itze when you reuse the models or the livery renders.
+
+The SIL Open Font License applies to font software. This repository does not contain a ZSSK text face to release under it. `public/fonts/ZSSK variable-VF.ttf` is the small file the stylesheet already points at; its internal name is SchooToGo variable icons, so it is not relicensed here. Instrument Sans and Instrument Serif stay on the SIL licence they already have from Google Fonts.
 
 Reference photographs, environment maps, and third-party trademarks are not relicensed. Details are in [LICENSE](LICENSE).
 
@@ -137,7 +138,7 @@ src/                Three.js scene, showcase UI, styles
 models/             GLB modules for the train builder
 assets/             Thumbnails, logo, interface drawings
 public/             Content pages, research images, livery renders, font
-public/fonts/       ZSSK Variable + OFL.txt
+public/fonts/       Font file the stylesheet loads
 Dockerfile          Node build → nginx
 nginx.conf          Static hosting, port 80
 ```

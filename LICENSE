@@ -1,18 +1,10 @@
-Slovak Railways Redesign is published in three parts.
+Slovak Railways Redesign is published in two open parts, plus files
+that stay under their own terms.
+
 This is an independent student project by Dalibor Itze. It is not an
 official work of Železničná spoločnosť Slovensko. Names such as ZSSK,
 Stadler, Siemens, and the railway's existing marks remain their owners'
 trademarks.
-
-## Typeface — SIL Open Font License 1.1
-
-ZSSK Variable (`public/fonts/ZSSK variable-VF.ttf` and the FontLab source
-`ZSSK variable.vfc`) is licensed under the SIL Open Font License, Version 1.1,
-with Reserved Font Name "ZSSK Variable".
-
-Copyright 2025 Dalibor Itze (https://asymetric.studio)
-
-The full license is in OFL.txt and public/fonts/OFL.txt.
 
 ## Website code — MIT License
 
@@ -54,13 +46,20 @@ if you made changes.
 This covers, in particular:
 
 - `models/` — the 3D rolling-stock modules used by the train builder
-- `assets/` — builder thumbnails, logo, and interface drawings
+- `assets/` — builder thumbnails, logo, and interface drawings made for the thesis
 - `public/other/renders/` — the livery renders
 - original diagrams and pictograms drawn for the thesis
 
-The SIL Open Font License applies only to font software. These images and
-models are therefore released under CC BY 4.0, which is the open licence
-that actually covers them.
+## Font file in this repository
+
+`public/fonts/ZSSK variable-VF.ttf` is the file the site loads. Its internal
+name is "SchooToGo variable icons", not a ZSSK text face. It is about 3 KB
+and is kept so the existing CSS keeps working. It is not released under the
+SIL Open Font License, and it is not the thesis typeface.
+
+The SIL Open Font License only covers font software. There is no separate
+ZSSK Variable font binary in this project to license. Original images and
+models are under CC BY 4.0 above.
 
 ## Not included in the open grant
 

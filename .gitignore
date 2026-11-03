@@ -25,6 +25,7 @@ Thumbs.db
 public/gltf-optimizer-main
 public/fonts/BasierCircle-Medium.otf
 ZSSK variable.backup
+*.vfc
 *.suo
 *.ntvs*
 *.njsproj
