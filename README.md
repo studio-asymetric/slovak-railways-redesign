@@ -89,7 +89,7 @@ docker run --rm -p 8080:80 slovak-railways-redesign
 | Branch | `main` |
 | Build pack | **Dockerfile** (repository root) |
 | Port | **80** |
-| Domain | `zssk.asymetric.studio` |
+| Domains | `railwaydesign.xyz` and `www.railwaydesign.xyz` |
 | Environment | none |
 | Volumes | none |
 | Auto deploy | on |
@@ -102,7 +102,7 @@ The `asymetric.studio` zone still has a legacy wildcard. A specific record has t
 
 | Type | Host | Target |
 | --- | --- | --- |
-| A | `zssk` | `157.90.175.53` |
+| A | `@` and `www` | `157.90.175.53` |
 
 Registrar: Wedos. Same VPS as the rest of Studio Asymetric (`ops.asymetric.studio`).
 
@@ -111,7 +111,7 @@ Registrar: Wedos. Same VPS as the rest of Studio Asymetric (`ops.asymetric.studi
 1. Coolify → Sources → GitHub App, and grant this public repository.
 2. New Application from `studio-asymetric/slovak-railways-redesign`, branch `main`, build pack **Dockerfile**.
 3. Set the container port to **80**.
-4. Add domain `zssk.asymetric.studio` and turn HTTPS on.
+4. Add both `https://railwaydesign.xyz` and `https://www.railwaydesign.xyz`, and turn HTTPS on. nginx sends `www` to the apex with a 301.
 5. Turn Auto Deploy on.
 6. Add the Wedos A record above, then open the site and the train builder.
 

@@ -2573,6 +2573,29 @@ function isScrollUrlSyncSuspended() {
     return Date.now() < scrollUrlSyncLockUntil;
 }
 
+const SITE_ORIGIN = 'https://railwaydesign.xyz';
+
+function setCanonicalFromUrl(url) {
+    let path = String(url || window.location.pathname || '/')
+        .split('?')[0]
+        .split('#')[0];
+    if (!path || path === '/index.html') path = '/';
+    if (path.length > 1 && path.endsWith('/')) path = path.slice(0, -1);
+    const normalized = path;
+    const href = `${SITE_ORIGIN}${normalized}`;
+    let link = document.querySelector('link[rel="canonical"]');
+    if (!link) {
+        link = document.createElement('link');
+        link.setAttribute('rel', 'canonical');
+        document.head.appendChild(link);
+    }
+    link.setAttribute('href', href);
+    const og = document.querySelector('meta[property="og:url"]');
+    if (og) {
+        og.setAttribute('content', href);
+    }
+}
+
 function buildSiteUrl(sectionId, hash) {
     if (!sectionId) return '/';
     const section = THESIS_SECTIONS[sectionId];
@@ -2667,10 +2690,12 @@ function updateUrlFromScroll() {
         '',
         nextUrl,
     );
+    setCanonicalFromUrl(nextUrl);
 }
 function syncScrollUrlState(url = getCurrentSiteUrl()) {
     lastScrollSyncUrl = url;
     suspendScrollUrlSync();
+    setCanonicalFromUrl(url);
 }
 
 let scrollUrlSyncLockUntil = 0;
@@ -2949,6 +2974,7 @@ async function navigateToThesis({ sectionId, hash, pushState = true, restoreScro
             '',
             url,
         );
+        setCanonicalFromUrl(url);
         syncScrollUrlState(url);
     } else {
         syncScrollUrlState();
@@ -2968,6 +2994,7 @@ function exitReadingMode({ pushState = true } = {}) {
     scrollToElement(document.getElementById('hero-overlay'), { offset: 0, immediate: false });
     if (pushState) {
         window.history.pushState({ section: 'hero', mode: 'play' }, '', '/');
+        setCanonicalFromUrl('/');
         syncScrollUrlState('/');
     } else {
         syncScrollUrlState('/');
